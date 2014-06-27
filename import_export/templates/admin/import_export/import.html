@@ -31,7 +31,7 @@
       {% trans "This importer will import the following fields: " %}
       {% for f in fields  %}
         {% if forloop.counter0 %}
-        , 
+        ,
         {% endif %}
         <tt>{{ f }}</tt>
       {% endfor %}
@@ -81,7 +81,7 @@
   <h2>
     {% trans "Preview" %}
   </h2>
-  <table>
+  <table class="table table-striped">
     <thead>
       <tr>
         <th></th>
