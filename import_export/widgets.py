@@ -21,6 +21,9 @@ class Widget(object):
     * converts import value and converts it to appropriate python
       representation
     """
+    def __init__(self, field):
+        self.field = field
+
     def clean(self, value):
         """
         Returns appropriate python objects for import value.
@@ -54,6 +57,10 @@ class DecimalWidget(Widget):
         if not value:
             return None
         return Decimal(value)
+
+    def render(self, value):
+        return format(value, '%d.%df' % (self.field.max_digits,
+                                         self.field.decimal_places))
 
 
 class CharWidget(Widget):
@@ -93,7 +100,8 @@ class DateWidget(Widget):
     http://www.cpearson.com/excel/datetime.htm
     """
 
-    def __init__(self, format=None):
+    def __init__(self, format=None, *args, **kwargs):
+        super(DateWidget, self).__init__(*args, **kwargs)
         if format is None:
             format = "%Y-%m-%d"
         self.format = format
@@ -120,7 +128,8 @@ class DateTimeWidget(Widget):
     http://www.cpearson.com/excel/datetime.htm
     """
 
-    def __init__(self, format=None):
+    def __init__(self, format=None, *args, **kwargs):
+        super(DateTimeWidget, self).__init__(*args, **kwargs)
         if format is None:
             format = "%Y-%m-%d %H:%M:%S"
         self.format = format
@@ -144,10 +153,10 @@ class ForeignKeyWidget(Widget):
     Requires a positional argument: the class to which the field is related.
     """
 
-    def __init__(self, model, to_field='pk', *args, **kwargs):
-        self.model = model
-        self.to_field = to_field
+    def __init__(self, *args, **kwargs):
         super(ForeignKeyWidget, self).__init__(*args, **kwargs)
+        self.model = self.field.rel.to
+        self.to_field = self.field.rel.field_name
 
     def clean(self, value):
         value = super(ForeignKeyWidget, self).clean(value)
@@ -167,9 +176,9 @@ class ManyToManyWidget(Widget):
     Requires a positional argument: the class to which the field is related.
     """
 
-    def __init__(self, model, *args, **kwargs):
-        self.model = model
+    def __init__(self, *args, **kwargs):
         super(ManyToManyWidget, self).__init__(*args, **kwargs)
+        self.model = self.field.rel.to
 
     def clean(self, value):
         if not value:
