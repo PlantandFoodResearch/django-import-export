@@ -278,7 +278,10 @@ class ExportMixin(object):
             ]()
 
             resource_class = self.get_export_resource_class()
-            queryset = self.get_export_queryset(request)
+            if form.cleaned_data['skeleton']:
+                queryset = self.model._default_manager.none()
+            else:
+                queryset = self.get_export_queryset(request)
             data = resource_class().export(queryset)
             response = HttpResponse(
                 file_format.export_data(data),

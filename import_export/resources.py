@@ -433,7 +433,7 @@ class ModelDeclarativeMetaclass(DeclarativeMetaclass):
                 field = Field(attribute=f.name,
                               column_name=f.name,
                               db_column=db_column,
-                              widget=FieldWidget(**widget_kwargs))
+                              widget=FieldWidget(field=f, **widget_kwargs))
                 field_list.append((f.name, field, ))
 
             new_class.fields.update(SortedDict(field_list))
@@ -459,7 +459,8 @@ class ModelDeclarativeMetaclass(DeclarativeMetaclass):
                     FieldWidget = new_class.widget_from_django_field(f)
                     widget_kwargs = new_class.widget_kwargs_for_field(field_name)
                     field = Field(attribute=field_name, column_name=field_name,
-                            widget=FieldWidget(**widget_kwargs), readonly=True)
+                            widget=FieldWidget(field=f, **widget_kwargs),
+                            readonly=True)
                     field_list.append((field_name, field, ))
 
                 new_class.fields.update(SortedDict(field_list))
@@ -481,11 +482,9 @@ class ModelResource(six.with_metaclass(ModelDeclarativeMetaclass, Resource)):
         result = default
         internal_type = f.get_internal_type()
         if internal_type in ('ManyToManyField', ):
-            result = functools.partial(widgets.ManyToManyWidget,
-                    model=f.rel.to)
+            result = widgets.ManyToManyWidget
         if internal_type in ('ForeignKey', 'OneToOneField', ):
-            result = functools.partial(widgets.ForeignKeyWidget,
-                    model=f.rel.to, to_field=f.rel.field_name)
+            result = widgets.ForeignKeyWidget
         if internal_type in ('DecimalField', ):
             result = widgets.DecimalWidget
         if internal_type in ('DateTimeField', ):

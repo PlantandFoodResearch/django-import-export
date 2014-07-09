@@ -64,6 +64,18 @@ class ImportExportAdminIntegrationTest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTrue(response.has_header("Content-Disposition"))
 
+    def test_skeleton_export(self):
+        response = self.client.get('/admin/core/book/export/')
+        self.assertEqual(response.status_code, 200)
+
+        data = {
+                'file_format': '0',
+                'skeleton': '1'
+                }
+        response = self.client.post('/admin/core/book/export/', data)
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(response.has_header("Content-Disposition"))
+
     def test_import_export_buttons_visible_without_add_permission(self):
         # issue 38 - Export button not visible when no add permission
         original = BookAdmin.has_add_permission

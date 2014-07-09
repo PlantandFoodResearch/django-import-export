@@ -41,6 +41,9 @@ class ExportForm(forms.Form):
             label=_('Format'),
             choices=(),
             )
+    skeleton = forms.BooleanField(
+        help_text="Make this export a bare spreadsheet without any data",
+    )
 
     def __init__(self, formats, *args, **kwargs):
         super(ExportForm, self).__init__(*args, **kwargs)
