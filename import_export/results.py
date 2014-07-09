@@ -8,6 +8,9 @@ class Error(object):
         self.error = error
         self.traceback = traceback
 
+    def __iter__(self):
+        yield self.error
+
 
 class FieldValidationError(ValidationError):
     """Extended ValidationError that tracks the offending field"""
