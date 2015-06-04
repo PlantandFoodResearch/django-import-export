@@ -1,11 +1,74 @@
 Changelog for django-import-export
 ==================================
 
-0.2.3 (unreleased)
+0.2.8 (unreleased)
 ------------------
 
 - Export/Import foreign key fields with their ``to_field`` attribute
 - On importing call ``clean`` of model field to invoke validators
+- add possibility to override tmp storage class (#133, #251)
+
+
+0.2.7 (2015-05-04)
+------------------
+
+- Django 1.8 compatibility
+
+- add attribute inheritance to Resource (#140)
+
+- make the filename and user available to import_data (#237)
+
+- Add to_encoding functionality (#244)
+
+- Call before_import before creating the instance_loader - fixes #193
+
+
+0.2.6 (2014-10-09)
+------------------
+
+- added use of get_diff_headers method into import.html template (#158)
+
+- Try to use OrderedDict instead of SortedDict, which is deprecated in 
+  Django 1.7 (#157)
+
+- fixed #105 unicode import
+
+- remove invalid form action "form_url" #154
+
+
+0.2.5 (2014-10-04)
+------------------
+
+- Do not convert numeric types to string (#149)
+
+- implement export as an admin action (#124)
+
+
+0.2.4 (2014-09-18)
+------------------
+
+- fix: get_value raised attribute error on model method call
+
+- Fixed XLS import on python 3. Optimized loop
+
+- Fixed properly skipping row marked as skipped when importing data from 
+  the admin interface.
+  
+- Allow Resource.export to accept iterables as well as querysets
+
+- Improve error messages
+
+- FIX: Properly handle NullBoleanField (#115) - Backward Incompatible Change
+  previously None values were handled as false
+
+
+0.2.3 (2014-07-01)
+------------------
+
+- Add separator and field keyword arguments to ManyToManyWidget
+
+- FIX: No support for dates before 1900 (#93)
+>>>>>>> 95722b924741dd7b2bfc4a461066cd662d3b209a
 
 
 0.2.2 (2014-04-18)

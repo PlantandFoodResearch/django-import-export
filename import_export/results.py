@@ -4,9 +4,10 @@ from django.core.exceptions import ValidationError
 
 class Error(object):
 
-    def __init__(self, error, traceback=None):
+    def __init__(self, error, traceback=None, row=None):
         self.error = error
         self.traceback = traceback
+        self.row = row
 
     def __iter__(self):
         yield self.error
