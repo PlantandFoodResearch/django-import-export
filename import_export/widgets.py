@@ -24,9 +24,6 @@ class Widget(object):
     * converts import value and converts it to appropriate python
       representation
     """
-    def __init__(self, field):
-        self.field = field
-
     def clean(self, value):
         """
         Returns appropriate python objects for import value.

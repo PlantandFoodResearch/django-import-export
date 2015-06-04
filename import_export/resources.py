@@ -584,8 +584,12 @@ class ModelResource(six.with_metaclass(ModelDeclarativeMetaclass, Resource)):
 
         FieldWidget = self.widget_from_django_field(django_field)
         widget_kwargs = self.widget_kwargs_for_field(field_name)
+        if hasattr(django_field, 'rel') and django_field.rel is not None:
+            widget = FieldWidget(django_field.rel.to, **widget_kwargs)
+        else:
+            widget = FieldWidget(**widget_kwargs)
         field = Field(attribute=field_name, column_name=field_name,
-                widget=FieldWidget(**widget_kwargs), readonly=readonly)
+                widget=widget, readonly=readonly)
         return field
 
     def get_import_id_fields(self):
