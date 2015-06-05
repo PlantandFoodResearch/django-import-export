@@ -24,8 +24,8 @@ class Widget(object):
     * converts import value and converts it to appropriate python
       representation
     """
-    def __init__(self, field):
-        self.field = field
+    def __init__(self, *args, **kwargs):
+        self.field = kwargs.get('django_field')
 
     def clean(self, value):
         """
@@ -207,10 +207,11 @@ class ForeignKeyWidget(Widget):
         ``model`` should be the Model instance for this ForeignKey (required).
         ``field`` should be the lookup field on the related model.
     """
-    def __init__(self, model, field='pk', *args, **kwargs):
-        self.model = model
-        self.field = field
+    def __init__(self, *args, **kwargs):
         super(ForeignKeyWidget, self).__init__(*args, **kwargs)
+        self.model = self.field.rel.to
+        self.field = kwargs.get('field', 'pk')
+
 
     def clean(self, value):
         val = super(ForeignKeyWidget, self).clean(value)
@@ -236,15 +237,15 @@ class ManyToManyWidget(Widget):
         field - field of related model, default ``pk``
     """
 
-    def __init__(self, model, separator=None, field=None, *args, **kwargs):
+    def __init__(self, separator=None, field=None, *args, **kwargs):
+        super(ManyToManyWidget, self).__init__(*args, **kwargs)
         if separator is None:
             separator = ','
         if field is None:
             field = 'pk'
-        self.model = model
+        self.model = self.field.rel.to
         self.separator = separator
         self.field = field
-        super(ManyToManyWidget, self).__init__(*args, **kwargs)
 
     def clean(self, value):
         if not value:

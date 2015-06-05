@@ -581,13 +581,10 @@ class ModelResource(six.with_metaclass(ModelDeclarativeMetaclass, Resource)):
         """
         Returns a Resource Field instance for the given Django model field.
         """
-
         FieldWidget = self.widget_from_django_field(django_field)
         widget_kwargs = self.widget_kwargs_for_field(field_name)
-        if hasattr(django_field, 'rel') and django_field.rel is not None:
-            widget = FieldWidget(django_field.rel.to, django_field, **widget_kwargs)
-        else:
-            widget = FieldWidget(django_field, **widget_kwargs)
+        widget_kwargs['django_field'] = django_field
+        widget = FieldWidget(**widget_kwargs)
         field = Field(attribute=field_name, column_name=field_name,
                 widget=widget, readonly=readonly)
         return field
