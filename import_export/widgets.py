@@ -209,7 +209,7 @@ class ForeignKeyWidget(Widget):
     """
     def __init__(self, *args, **kwargs):
         super(ForeignKeyWidget, self).__init__(*args, **kwargs)
-        self.model = self.field.rel.to
+        self.model = kwargs['django_field'].rel.to
         self.field = kwargs.get('field', 'pk')
 
 
@@ -243,7 +243,7 @@ class ManyToManyWidget(Widget):
             separator = ','
         if field is None:
             field = 'pk'
-        self.model = self.field.rel.to
+        self.model = kwargs['django_field'].rel.to
         self.separator = separator
         self.field = field
 
