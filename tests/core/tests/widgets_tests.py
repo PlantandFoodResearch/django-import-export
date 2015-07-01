@@ -153,6 +153,11 @@ class ManyToManyWidget(TestCase):
         self.assertIn(self.cat1, cleaned_data)
         self.assertIn(self.cat2, cleaned_data)
 
+    def test_clean_handles_spaces(self):
+        value = " %s , %s " % (self.cat1.pk, self.cat2.pk)
+        cleaned_data = list(self.widget.clean(value))
+        self.assertListEqual([self.cat1, self.cat2], cleaned_data)
+
     def test_render(self):
         self.assertEqual(self.widget.render(Category.objects),
                 "%s,%s" % (self.cat1.pk, self.cat2.pk))
